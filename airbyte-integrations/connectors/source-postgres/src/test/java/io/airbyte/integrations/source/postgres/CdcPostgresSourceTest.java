@@ -10,7 +10,6 @@ import static io.airbyte.integrations.debezium.internals.DebeziumEventUtils.CDC_
 import static io.airbyte.integrations.source.jdbc.test.JdbcSourceAcceptanceTest.setEnv;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,7 +20,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import io.airbyte.commons.features.EnvVariableFeatureFlags;
 import io.airbyte.commons.io.IOs;
 import io.airbyte.commons.json.Jsons;
@@ -45,23 +43,19 @@ import io.airbyte.protocol.models.AirbyteMessage;
 import io.airbyte.protocol.models.AirbyteRecordMessage;
 import io.airbyte.protocol.models.AirbyteStateMessage;
 import io.airbyte.protocol.models.AirbyteStream;
-import io.airbyte.protocol.models.AirbyteStreamState;
 import io.airbyte.protocol.models.CatalogHelpers;
 import io.airbyte.protocol.models.ConfiguredAirbyteCatalog;
-import io.airbyte.protocol.models.ConfiguredAirbyteStream;
 import io.airbyte.protocol.models.Field;
 import io.airbyte.protocol.models.JsonSchemaType;
-import io.airbyte.protocol.models.StreamDescriptor;
 import io.airbyte.protocol.models.SyncMode;
 import io.airbyte.test.utils.PostgreSQLContainerHelper;
+import io.debezium.engine.ChangeEvent;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+import org.apache.kafka.connect.source.SourceRecord;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.junit.jupiter.api.AfterEach;
@@ -279,72 +273,6 @@ abstract class CdcPostgresSourceTest extends CdcSourceTest {
   }
 
   @Override
-  @Test
-  public void testRecordsProducedDuringAndAfterSync() throws Exception {
-
-    final int recordsToCreate = 20;
-    // first batch of records. 20 created here and 6 created in setup method.
-    for (int recordsCreated = 0; recordsCreated < recordsToCreate; recordsCreated++) {
-      final JsonNode record =
-          Jsons.jsonNode(ImmutableMap
-              .of(COL_ID, 100 + recordsCreated, COL_MAKE_ID, 1, COL_MODEL,
-                  "F-" + recordsCreated));
-      writeModelRecord(record);
-    }
-
-    final AutoCloseableIterator<AirbyteMessage> firstBatchIterator = getSource()
-        .read(getConfig(), CONFIGURED_CATALOG, null);
-    final List<AirbyteMessage> dataFromFirstBatch = AutoCloseableIterators
-        .toListAndClose(firstBatchIterator);
-    final List<AirbyteStateMessage> stateAfterFirstBatch = extractStateMessages(dataFromFirstBatch);
-    assertEquals(1, stateAfterFirstBatch.size());
-    assertNotNull(stateAfterFirstBatch.get(0).getData());
-    assertExpectedStateMessages(stateAfterFirstBatch);
-    final Set<AirbyteRecordMessage> recordsFromFirstBatch = extractRecordMessages(
-        dataFromFirstBatch);
-    assertEquals((MODEL_RECORDS.size() + recordsToCreate), recordsFromFirstBatch.size());
-
-    // second batch of records again 20 being created
-    for (int recordsCreated = 0; recordsCreated < recordsToCreate; recordsCreated++) {
-      final JsonNode record =
-          Jsons.jsonNode(ImmutableMap
-              .of(COL_ID, 200 + recordsCreated, COL_MAKE_ID, 1, COL_MODEL,
-                  "F-" + recordsCreated));
-      writeModelRecord(record);
-    }
-
-    final JsonNode state = Jsons.jsonNode(stateAfterFirstBatch);
-    final AutoCloseableIterator<AirbyteMessage> secondBatchIterator = getSource()
-        .read(getConfig(), CONFIGURED_CATALOG, state);
-    final List<AirbyteMessage> dataFromSecondBatch = AutoCloseableIterators
-        .toListAndClose(secondBatchIterator);
-
-    final List<AirbyteStateMessage> stateAfterSecondBatch = extractStateMessages(dataFromSecondBatch);
-    assertEquals(1, stateAfterSecondBatch.size());
-    assertNotNull(stateAfterSecondBatch.get(0).getData());
-    assertExpectedStateMessages(stateAfterSecondBatch);
-
-    final Set<AirbyteRecordMessage> recordsFromSecondBatch = extractRecordMessages(
-        dataFromSecondBatch);
-    assertEquals(recordsToCreate * 2, recordsFromSecondBatch.size(),
-        "Expected 40 records to be replicated in the second sync.");
-
-    // sometimes there can be more than one of these at the end of the snapshot and just before the
-    // first incremental.
-    final Set<AirbyteRecordMessage> recordsFromFirstBatchWithoutDuplicates = removeDuplicates(
-        recordsFromFirstBatch);
-    final Set<AirbyteRecordMessage> recordsFromSecondBatchWithoutDuplicates = removeDuplicates(
-        recordsFromSecondBatch);
-
-    final int recordsCreatedBeforeTestCount = MODEL_RECORDS.size();
-    assertTrue(recordsCreatedBeforeTestCount < recordsFromFirstBatchWithoutDuplicates.size(),
-        "Expected first sync to include records created while the test was running.");
-    assertEquals((recordsToCreate * 3) + recordsCreatedBeforeTestCount,
-        recordsFromFirstBatchWithoutDuplicates.size() + recordsFromSecondBatchWithoutDuplicates
-            .size());
-  }
-
-  @Override
   protected String randomTableSchema() {
     return MODELS_SCHEMA + "_random";
   }
@@ -456,6 +384,51 @@ abstract class CdcPostgresSourceTest extends CdcSourceTest {
         dataFromThirdBatch);
 
     assertEquals(MODEL_RECORDS.size() + recordsToCreate + 1, recordsFromThirdBatch.size());
+  }
+
+  @Test
+  void testReachedTargetPosition() {
+    final CdcTargetPosition ctp = cdcLatestTargetPosition();
+    final PostgresCdcTargetPosition pctp = (PostgresCdcTargetPosition) ctp;
+    final PgLsn target = pctp.targetLsn;
+    assertTrue(ctp.reachedTargetPosition(target.asLong() + 1));
+    assertTrue(ctp.reachedTargetPosition(target.asLong()));
+    assertFalse(ctp.reachedTargetPosition(target.asLong() - 1));
+    assertFalse(ctp.reachedTargetPosition((Long) null));
+  }
+
+  @Test
+  void testGetHeartbeatPosition() {
+    final CdcTargetPosition ctp = cdcLatestTargetPosition();
+    final PostgresCdcTargetPosition pctp = (PostgresCdcTargetPosition) ctp;
+    final Long lsn = pctp.getHeartbeatPosition(new ChangeEvent<String, String>() {
+
+      private final SourceRecord sourceRecord = new SourceRecord(null, Collections.singletonMap("lsn", 358824993496L), null, null, null);
+
+      @Override
+      public String key() {
+        return null;
+      }
+
+      @Override
+      public String value() {
+        return "{\"ts_ms\":1667616934701}";
+      }
+
+      @Override
+      public String destination() {
+        return null;
+      }
+
+      public SourceRecord sourceRecord() {
+        return sourceRecord;
+      }
+
+    });
+
+    assertEquals(lsn, 358824993496L);
+
+    assertNull(pctp.getHeartbeatPosition(null));
   }
 
 }

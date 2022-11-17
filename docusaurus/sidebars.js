@@ -31,11 +31,12 @@ module.exports = {
     {
       type: 'category',
       label: 'Connector Catalog',
-      link: {
-        type: 'doc',
-        id: 'integrations/README',
-      },
       items: [
+          {
+            type: 'doc',
+            label: 'Search and Stages',
+            id: 'integrations/README',
+          },
           {
             type: 'category',
             label: 'Sources',
@@ -62,11 +63,12 @@ module.exports = {
     {
       type: 'category',
       label: 'Airbyte Cloud',
-      link: {
-        type: 'doc',
-        id: 'cloud/getting-started-with-airbyte-cloud',
-      },
       items: [
+        {
+          type: 'doc',
+          label: 'Getting Started',
+          id: "cloud/getting-started-with-airbyte-cloud",
+        },
         'cloud/core-concepts',
         'cloud/managing-airbyte-cloud',
 
@@ -74,7 +76,7 @@ module.exports = {
     },
     {
       type: 'category',
-      label: 'Airbyte Open Source QuickStart',
+      label: 'Airbyte Open Source Quick Start',
       link: {
         type: 'generated-index',
       },
@@ -93,10 +95,24 @@ module.exports = {
       },
       items: [
         'deploying-airbyte/local-deployment',
-        'deploying-airbyte/on-aws-ec2',
-        'deploying-airbyte/on-azure-vm-cloud-shell',
-        'deploying-airbyte/on-gcp-compute-engine',
+        {
+          type: 'doc',
+          label: 'Deploy Airbyte on AWS EC2',
+          id: 'deploying-airbyte/on-aws-ec2',
+        },
+        
+        {
+          type: 'doc',
+          label: 'Deploy Airbyte on Azure',
+          id:'deploying-airbyte/on-azure-vm-cloud-shell',
+        },
+        {
+          type: 'doc',
+          label: 'Deploy Airbyte on Google (GCP)',
+          id:'deploying-airbyte/on-gcp-compute-engine',
+        },
         'deploying-airbyte/on-kubernetes',
+        'deploying-airbyte/on-kubernetes-via-helm',
         'deploying-airbyte/on-plural',
         'deploying-airbyte/on-oci-vm',
         'deploying-airbyte/on-digitalocean-droplet',
@@ -145,11 +161,8 @@ module.exports = {
     {
       type: 'category',
       label: 'Troubleshoot Airbyte',
-      link: {
-        type: 'doc',
-        id: 'troubleshooting/README',
-      },
       items: [
+        'troubleshooting/README',
         'troubleshooting/on-deploying',
         'troubleshooting/new-connection',
         'troubleshooting/running-sync',     
@@ -157,12 +170,64 @@ module.exports = {
     },
     {
       type: 'category',
-      label: 'Build a connector',
-      link: {
-        type: 'doc',
-        id: 'connector-development/README',
-      },      
+      label: 'Build a connector',      
       items: [
+        {
+          type: 'doc',
+          label: 'CDK Introduction',
+          id: 'connector-development/README',
+        },
+        {
+          type: 'category',
+          label: 'Low-code connector development',
+          items: [
+            {
+              label: 'Low-code CDK Intro',
+              type: 'doc',
+              id: 'connector-development/config-based/low-code-cdk-overview',
+            },
+            {
+              type: 'category',
+              label: 'Tutorial',
+              items: [
+                'connector-development/config-based/tutorial/getting-started',
+                'connector-development/config-based/tutorial/create-source',
+                'connector-development/config-based/tutorial/install-dependencies',
+                'connector-development/config-based/tutorial/connecting-to-the-API-source',
+                'connector-development/config-based/tutorial/reading-data',
+                'connector-development/config-based/tutorial/incremental-reads',
+                'connector-development/config-based/tutorial/testing',
+              ],
+            },
+            {
+              type: 'category',
+              label: 'Understanding the YAML file',
+              link: {
+                type: 'doc',
+                id: 'connector-development/config-based/understanding-the-yaml-file/yaml-overview',
+              },
+              items: [
+                {
+                  type: `category`,
+                  label: `Requester`,
+                  link: {
+                    type: 'doc',
+                    id: 'connector-development/config-based/understanding-the-yaml-file/requester',
+                  },
+                  items: [
+                    'connector-development/config-based/understanding-the-yaml-file/request-options',
+                    'connector-development/config-based/understanding-the-yaml-file/authentication',
+                    'connector-development/config-based/understanding-the-yaml-file/error-handling',  
+                  ]
+              },
+                'connector-development/config-based/understanding-the-yaml-file/pagination',
+                'connector-development/config-based/understanding-the-yaml-file/record-selector',
+                'connector-development/config-based/understanding-the-yaml-file/stream-slicers',
+              ]
+            },
+            'connector-development/config-based/advanced-topics',    
+          ]
+        },
         'connector-development/tutorials/cdk-speedrun',
         {
           type: 'category',
@@ -212,11 +277,8 @@ module.exports = {
     {
       type: 'category',
       label: 'Contribute to Airbyte',
-      link: {
-        type: 'doc',
-        id: 'contributing-to-airbyte/README',
-      },
       items: [
+        'contributing-to-airbyte/README',
         'contributing-to-airbyte/code-of-conduct',
         'contributing-to-airbyte/maintainer-code-of-conduct',
         'contributing-to-airbyte/developing-locally',
@@ -255,11 +317,12 @@ module.exports = {
         {
           type: 'category',
           label: 'Connections and Sync Modes',
-          link: {
-            type: 'doc',
-            id: 'understanding-airbyte/connections/README',
-          },
           items: [
+            {
+              type: 'doc',
+              label: 'Connections Overview',
+              id: "understanding-airbyte/connections/README",
+            },
             'understanding-airbyte/connections/full-refresh-overwrite',
             'understanding-airbyte/connections/full-refresh-append',
             'understanding-airbyte/connections/incremental-append',
@@ -274,7 +337,7 @@ module.exports = {
         'understanding-airbyte/namespaces',
         'understanding-airbyte/supported-data-types',
         'understanding-airbyte/json-avro-conversion',
-        'understanding-airbyte/glossary',
+        'understanding-airbyte/database-data-catalog',
       ]
     },
     {
@@ -328,6 +391,8 @@ module.exports = {
       items: [
          'release_notes/july_2022',
          'release_notes/august_2022',
+         'release_notes/september_2022',
+         'release_notes/october_2022',
       ],
     },
   ],
