@@ -8,10 +8,14 @@ from airbyte_cdk.sources.streams.http import HttpStream
 from airbyte_cdk.sources.streams.http.auth import TokenAuthenticator
 
 class ConnatixReportUrl(HttpStream):
-    url_base = "https://conapi.connatix.com/graphql"
-
-    # Set this as a noop.
+    url_base = "https://conapi.connatix.com/"
+    http_method = "POST"
     primary_key = None
+
+    def __init__(self, config: Mapping[str, Any], **kwargs):
+        super().__init__()
+        self.bearer_token = config['BearerToken']
+        self.report_id = config['ReportId']
 
     def next_page_token(self, response: requests.Response) -> Optional[Mapping[str, Any]]:
         # The API does not offer pagination, so we return None to indicate there are no more pages in the response
@@ -23,7 +27,32 @@ class ConnatixReportUrl(HttpStream):
         stream_slice: Mapping[str, Any] = None, 
         next_page_token: Mapping[str, Any] = None
     ) -> str:
-        return ""  # TODO
+        return "graphql"  # TODO
+
+    def request_headers(self, **kwargs) -> Mapping[str, Any]:
+        return {'authorization': f'Bearer {self.bearer_token}'}
+
+    def request_json(
+            self,
+            stream_state: Mapping[str, Any],
+            stream_slice: Mapping[str, Any] = None,
+            next_page_token: Mapping[str, Any] = None,
+    ) -> MutableMapping[str, Any]:
+        # The api requires that we include access_key as a query param so we do that in this method
+
+        body = 
+            f'''
+            query {
+                reports {
+                    downloadReport(reportId: {'\"' + self.report_id + '\"'}) {
+                    success,
+                    uriCsvResult
+                    }
+                }
+            }
+            '''
+
+        return {'query': body}
 
     def parse_response(
         self,
@@ -32,7 +61,7 @@ class ConnatixReportUrl(HttpStream):
         stream_slice: Mapping[str, Any] = None,
         next_page_token: Mapping[str, Any] = None,
     ) -> Iterable[Mapping]:
-        return None  # TODO
+        return [response.json()]
 
 from airbyte_cdk.sources.streams.http.auth import NoAuth
 
