@@ -1,0 +1,28 @@
+{
+    "streams": [
+        {
+            "stream": {
+                "name": "connatix_report_url",
+                "json_schema": {
+                    "data": {
+                      "reports": {
+                        "downloadReport": {
+                          "success": {
+                            "type": "string"
+                          },
+                          "uriCsvResult": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                "supported_sync_modes": [
+                    "full_refresh"
+                ]
+            },
+            "sync_mode": "full_refresh",
+            "destination_sync_mode": "overwrite"
+        }
+    ]
+}

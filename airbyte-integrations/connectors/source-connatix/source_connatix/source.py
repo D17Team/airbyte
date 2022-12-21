@@ -6,6 +6,8 @@ from airbyte_cdk.sources import AbstractSource
 from airbyte_cdk.sources.streams import Stream
 from airbyte_cdk.sources.streams.http import HttpStream
 from airbyte_cdk.sources.streams.http.auth import TokenAuthenticator
+from airbyte_cdk.sources.streams.http.auth import NoAuth
+
 
 class ConnatixReportUrl(HttpStream):
     url_base = "https://conapi.connatix.com/"
@@ -40,18 +42,17 @@ class ConnatixReportUrl(HttpStream):
     ) -> MutableMapping[str, Any]:
         # The api requires that we include access_key as a query param so we do that in this method
 
-        body = 
-            f'''
+        body = '''
             query {
                 reports {
-                    downloadReport(reportId: {'\"' + self.report_id + '\"'}) {
+                    downloadReport(reportId: "f356cc84-7fd7-4b20-b56f-17dcc9599c68") {
                     success,
                     uriCsvResult
                     }
                 }
             }
             '''
-
+        print(body)
         return {'query': body}
 
     def parse_response(
@@ -63,7 +64,6 @@ class ConnatixReportUrl(HttpStream):
     ) -> Iterable[Mapping]:
         return [response.json()]
 
-from airbyte_cdk.sources.streams.http.auth import NoAuth
 
 class SourceConnatix(AbstractSource):
     def check_connection(self, logger, config) -> Tuple[bool, any]:
