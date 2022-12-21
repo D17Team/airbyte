@@ -1,0 +1,14 @@
+{
+    "data": {
+      "reports": {
+        "downloadReport": {
+          "success": {
+            "type": ["null", "string"]
+          },
+          "uriCsvResult": {
+            "type": ["null", "string"]
+          }
+        }
+      }
+    }
+  }
