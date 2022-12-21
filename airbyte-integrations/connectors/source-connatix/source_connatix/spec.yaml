@@ -4,9 +4,22 @@ connectionSpecification:
   title: Connatix Spec
   type: object
   required:
-    - TODO
+    - BearerToken
+    - AccountId
+    - ReportId
   properties:
-    # 'TODO: This schema defines the configuration required for the source. This usually involves metadata such as database and/or authentication information.':
-    TODO:
+    BearerToken:
       type: string
-      description: describe me
+      description: Add the bearer token obtained from Connatix API Docs (https://support.connatix.com/hc/en-us/articles/360043867034-Platform-API-authorization)
+      airbyte_secret: true
+    AccountId:
+      type: string
+      description: Add the Account ID obtained using the Connatix API Docs (https://support.connatix.com/hc/en-us/articles/360043867034-Platform-API-authorization)
+      airbyte_secret: true
+    ReportId:
+      type: string
+      description: Add the unique report id available in the report URL.
+      examples:
+        - The report ID is available in the report URL, for example - https://portal.connatix.com/reports/view/<report-id>
+        - The report ID can also be queried using the API docs 
+
