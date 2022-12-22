@@ -2,6 +2,9 @@ from abc import ABC
 from typing import Any, Iterable, List, Mapping, MutableMapping, Optional, Tuple
 
 import requests
+import pandas as pd
+
+from .data_classes import AdRevenuePerHourItem
 from airbyte_cdk.sources import AbstractSource
 from airbyte_cdk.sources.streams import Stream
 from airbyte_cdk.sources.streams.http import HttpStream
@@ -32,9 +35,10 @@ class ConnatixReportUrl(HttpStream):
         return "graphql"  # TODO
 
     def request_headers(self, **kwargs) -> Mapping[str, Any]:
-        return {'authorization': f'Bearer {self.bearer_token}'}
+        return {'authorization': f'Bearer {self.bearer_token}',
+                'content-type': 'application/graphql'}
 
-    def request_json(
+    def request_params(
             self,
             stream_state: Mapping[str, Any],
             stream_slice: Mapping[str, Any] = None,
@@ -55,6 +59,23 @@ class ConnatixReportUrl(HttpStream):
         print(body)
         return {'query': body}
 
+    def generate_item(self, row):
+        """from a dict returned by the http request generate item
+
+        Args:
+            row (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        # row['customer_name'] = self.customer_name
+        try:
+            return AdRevenuePerHourItem.from_dict(row)
+        except Exception as e:
+            # todo: sometimes null values are returned from the apis, ignoring them now and they will be pulled on the next run
+            logger.error(f"error while parsing the row {row}, the error is {e}")
+            return None
+
     def parse_response(
         self,
         response: requests.Response,
@@ -62,8 +83,13 @@ class ConnatixReportUrl(HttpStream):
         stream_slice: Mapping[str, Any] = None,
         next_page_token: Mapping[str, Any] = None,
     ) -> Iterable[Mapping]:
-        return [response.json()]
 
+        response_data = response.json()
+        report_url = response_data['data']['reports']['downloadReport']['uriCsvResult']
+        report_df = pd.read_csv(report_url)[:-1]
+        for row in report_df.to_dict(orient='records'):
+            item = self.generate_item(row)
+            yield item.dict()
 
 class SourceConnatix(AbstractSource):
     def check_connection(self, logger, config) -> Tuple[bool, any]:
@@ -74,4 +100,4 @@ class SourceConnatix(AbstractSource):
         # Skip passing an authenticator if no authentication is required.
         # Other authenticators are available for API token-based auth and Oauth2. 
         auth = NoAuth()  
-        return [ConnatixReportUrl(authenticator=auth)]
+        return [ConnatixReportUrl(config=config, authenticator=auth)]
