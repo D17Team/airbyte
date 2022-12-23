@@ -7,7 +7,7 @@ from setuptools import find_packages, setup
 
 MAIN_REQUIREMENTS = [
     "airbyte-cdk~=0.2",
-    "pandas=1.5.2"
+    "pandas==1.5.2"
 ]
 
 TEST_REQUIREMENTS = [

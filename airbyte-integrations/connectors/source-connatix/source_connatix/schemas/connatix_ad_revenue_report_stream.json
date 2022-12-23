@@ -3,15 +3,15 @@
   "type": "object",
   "properties": {
     "domain": { "title": "Domain", "type": "string" },
-    "customer_id": { "title": "Customer Id", "type": "string" },
+    "customer_id": { "title": "Customer ID", "type": "string" },
     "customer_name": { "title": "Customer Name", "type": "string" },
-    "player_id": { "title": "Player Id", "type": "string" },
+    "player_id": { "title": "Player ID", "type": "string" },
     "player_name": { "title": "Player Name", "type": "string" },
     "device": { "title": "Device", "type": "string" },
-    "impressions": { "title": "Impressions", "type": "number"},
-    "revenue": { "title": "Revenue", "type": "number"},
-    "hour": { "title": "Hour", "type": "integer"},
-    "date": { "title": "Date", "type": "date-time"}
+    "impressions": { "title": "Impressions", "type": "number" },
+    "revenue": { "title": "Revenue", "type": "number" },
+    "hour": { "title": "Hour", "type": "integer" },
+    "date": { "title": "Date", "type": "string" }
   },
   "required": [
     "domain",
@@ -22,6 +22,7 @@
     "device",
     "impressions",
     "revenue",
-    "hour"
+    "hour",
+    "date"
   ]
 }
