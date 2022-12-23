@@ -17,6 +17,8 @@ class ConnatixAdRevenueReportStream(HttpStream):
     def __init__(self, config: Mapping[str, Any], **kwargs):
         super().__init__(authenticator=kwargs.get("authenticator"))
         self.report_id = config['ReportId']
+        self.app_id_list = config['AppIdList'].split(',')
+        self.tracker_version = config['TrackerVersion']
 
     def path(
         self,
@@ -58,6 +60,7 @@ class ConnatixAdRevenueReportStream(HttpStream):
         Returns:
             _type_: _description_
         """
+        row['v_tracker'] = f'connatix-{self.tracker_version}'
         try:
             return ConnatixReportItem.from_dict(row)
         except Exception as e:
@@ -86,4 +89,4 @@ class ConnatixAdRevenueReportStream(HttpStream):
         list of list of strings if composite primary key consisting of nested fields.
         If the stream has no primary keys, return None.
         """
-        return ["domain", "customer_id", "player_id", "device", "hour", "date"]
+        return ["domain", "customer_id", "player_id", "device", "hour", "date", "v_tracker"]

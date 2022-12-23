@@ -22,7 +22,11 @@ def patch_base_class(mocker):
 
 @pytest.fixture(name="connatix_ad_revenue_report_stream")
 def connatix_stream_fixture(patch_base_class):
-    config = {"ReportId": "123", "AccountId": "123", "BearerToken": "sample_token"}
+    config = {"ReportId": "123",
+              "AccountId": "123",
+              "BearerToken": "sample_token",
+              "AppIdList": "leaders.com,outsider.com,www.on3.com",
+              "TrackerVersion": "1.0"}
     return ConnatixAdRevenueReportStream(config=config, authenticator=MagicMock())
 
 
