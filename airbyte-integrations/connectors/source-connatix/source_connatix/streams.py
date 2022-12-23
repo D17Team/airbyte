@@ -73,6 +73,7 @@ class ConnatixAdRevenueReportStream(HttpStream):
         response_data = response.json()
         report_url = response_data['data']['reports']['downloadReport']['uriCsvResult']
         report_df = pd.read_csv(report_url)[:-1]
+        report_df = report_df[report_df['Domain / App'].isin(self.app_id_list)]
         for row in report_df.to_dict(orient='records'):
             item = self.generate_item(row)
             yield item.dict()
