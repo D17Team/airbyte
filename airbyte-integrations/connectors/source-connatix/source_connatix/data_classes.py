@@ -49,9 +49,10 @@ class AdRevenuePerHourItem(CustomBaseModel):
             customer_name=row_dict.get('Customer Name'),
             player_id=row_dict.get('Player Id'),
             player_name=row_dict.get('Player Name'),
+            v_tracker = row_dict.get('v_tracker'),
             device=row_dict.get('Device'),
             impressions=AdRevenuePerHourItem.convert_to_float_or_return_zero(row_dict.get('Ad Impressions')),
-            revenue=AdRevenuePerHourItem.convert_to_float_or_return_zero(row_dict.get('Publisher Total Revenue ($)'))/1e6,
+            revenue=AdRevenuePerHourItem.convert_to_float_or_return_zero(row_dict.get('Publisher Total Revenue ($)')),
             hour=datetime.strptime(row_dict.get('Hour').lower(), '%d-%b-%Y %H:%M').hour,
             date=datetime.strptime(row_dict.get('Hour').lower(), '%d-%b-%Y %H:%M')
         )

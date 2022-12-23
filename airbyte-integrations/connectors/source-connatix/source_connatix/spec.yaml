@@ -7,6 +7,7 @@ connectionSpecification:
     - BearerToken
     - AccountId
     - ReportId
+    - TrackerVersion
   properties:
     BearerToken:
       type: string
@@ -22,4 +23,14 @@ connectionSpecification:
       examples:
         - The report ID is available in the report URL, for example - https://portal.connatix.com/reports/view/<report-id>
         - The report ID can also be queried using the API docs 
+    TrackerVersion:
+      type: string
+      desciption: Tracker version number.
+      deafult: '1.0.1'
+    AppIdList:
+      type: string
+      desciption: Provide a list of App/Domains to filter on.
+      examples:
+        - "leaders.com,outsider.com,www.on3.com"
+    
 

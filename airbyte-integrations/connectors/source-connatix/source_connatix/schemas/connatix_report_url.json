@@ -1,14 +1,27 @@
 {
-    "data": {
-      "reports": {
-        "downloadReport": {
-          "success": {
-            "type": ["null", "string"]
-          },
-          "uriCsvResult": {
-            "type": ["null", "string"]
-          }
-        }
-      }
-    }
-  }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "domain": { "title": "Domain", "type": "string" },
+    "customer_id": { "title": "Customer Id", "type": "string" },
+    "customer_name": { "title": "Customer Name", "type": "string" },
+    "player_id": { "title": "Player Id", "type": "string" },
+    "player_name": { "title": "Player Name", "type": "string" },
+    "device": { "title": "Device", "type": "string" },
+    "impressions": { "title": "Impressions", "type": "number"},
+    "revenue": { "title": "Revenue", "type": "number"},
+    "hour": { "title": "Hour", "type": "integer"},
+    "date": { "title": "Date", "type": "date-time"}
+  },
+  "required": [
+    "domain",
+    "customer_id",
+    "customer_name",
+    "player_id",
+    "player_name",
+    "device",
+    "impressions",
+    "revenue",
+    "hour"
+  ]
+}

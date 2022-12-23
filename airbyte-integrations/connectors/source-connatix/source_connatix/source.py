@@ -21,6 +21,8 @@ class ConnatixReportUrl(HttpStream):
         super().__init__()
         self.bearer_token = config['BearerToken']
         self.report_id = config['ReportId']
+        self.app_id_list = config['AppIdList'].split(',')
+        self.tracker_version = config['TrackerVersion']
 
     def next_page_token(self, response: requests.Response) -> Optional[Mapping[str, Any]]:
         # The API does not offer pagination, so we return None to indicate there are no more pages in the response
@@ -49,14 +51,13 @@ class ConnatixReportUrl(HttpStream):
         body = '''
             query {
                 reports {
-                    downloadReport(reportId: "f356cc84-7fd7-4b20-b56f-17dcc9599c68") {
+                    downloadReport(reportId: "''' + self.report_id + '''") {
                     success,
                     uriCsvResult
                     }
                 }
             }
             '''
-        print(body)
         return {'query': body}
 
     def generate_item(self, row):
@@ -68,7 +69,7 @@ class ConnatixReportUrl(HttpStream):
         Returns:
             _type_: _description_
         """
-        # row['customer_name'] = self.customer_name
+        row['v_tracker'] = f'connatix-{self.tracker_version}'
         try:
             return AdRevenuePerHourItem.from_dict(row)
         except Exception as e:
@@ -86,7 +87,8 @@ class ConnatixReportUrl(HttpStream):
 
         response_data = response.json()
         report_url = response_data['data']['reports']['downloadReport']['uriCsvResult']
-        report_df = pd.read_csv(report_url)[:-1]
+        report_df = pd.read_csv(report_url)[:-1] 
+        report_df = report_df[report_df['Domain / App'].isin(self.app_id_list)]
         for row in report_df.to_dict(orient='records'):
             item = self.generate_item(row)
             yield item.dict()
