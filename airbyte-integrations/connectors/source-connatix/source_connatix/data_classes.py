@@ -21,7 +21,7 @@ class CustomBaseModel(BaseModel):
         return value
 
 
-class AdRevenuePerHourItem(CustomBaseModel):
+class ConnatixReportItem(CustomBaseModel):
     domain: str
     customer_id: str
     customer_name: str
@@ -34,7 +34,7 @@ class AdRevenuePerHourItem(CustomBaseModel):
     date: datetime  # need to specify the best date with the format
 
     @staticmethod
-    def from_dict(row_dict) -> "AdUnitPerHourItem":
+    def from_dict(row_dict) -> "ConnatixReportItem":
         """this parse one row of item level from the api to a python object
 
         Args:
@@ -43,15 +43,15 @@ class AdRevenuePerHourItem(CustomBaseModel):
         Returns:
             AdUnitPerHourItem: the python object
         """
-        return AdRevenuePerHourItem(
+        return ConnatixReportItem(
             domain=row_dict.get('Domain / App'),
             customer_id=row_dict.get('Customer Id'),
             customer_name=row_dict.get('Customer Name'),
             player_id=row_dict.get('Player Id'),
             player_name=row_dict.get('Player Name'),
             device=row_dict.get('Device'),
-            impressions=AdRevenuePerHourItem.convert_to_float_or_return_zero(row_dict.get('Ad Impressions')),
-            revenue=AdRevenuePerHourItem.convert_to_float_or_return_zero(row_dict.get('Publisher Total Revenue ($)'))/1e6,
+            impressions=ConnatixReportItem.convert_to_float_or_return_zero(row_dict.get('Ad Impressions')),
+            revenue=ConnatixReportItem.convert_to_float_or_return_zero(row_dict.get('Publisher Total Revenue ($)'))/1e6,
             hour=datetime.strptime(row_dict.get('Hour').lower(), '%d-%b-%Y %H:%M').hour,
             date=datetime.strptime(row_dict.get('Hour').lower(), '%d-%b-%Y %H:%M')
         )
