@@ -36,7 +36,7 @@ def test_parse_response(patch_base_class, connatix_ad_revenue_report_stream, moc
     for item in response_iter:
         assert isinstance(item, dict)
         assert item["domain"] in connatix_ad_revenue_report_stream.app_id_list
-        assert list(item.keys()) == ['domain', 'customer_id', 'customer_name', 'player_id', 'player_name', 'device', 'impressions', 'revenue', 'hour', 'date']
+        assert list(item.keys()) == ['domain', 'customer_id', 'customer_name', 'player_id', 'player_name', 'device', 'impressions', 'revenue', 'hour', 'date']        
 
 
 def test_request_headers(patch_base_class, connatix_ad_revenue_report_stream):

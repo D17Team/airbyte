@@ -2,7 +2,7 @@
     "streams": [
         {
             "stream": {
-                "name": "connatix_report_url",
+                "name": "connatix_ad_revenue_report_stream",
                 "json_schema": {
                     "data": {
                       "reports": {
