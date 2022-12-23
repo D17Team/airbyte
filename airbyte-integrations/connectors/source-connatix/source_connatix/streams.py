@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Mapping, MutableMapping, Optional
+from typing import Any, Iterable, Mapping, MutableMapping, Optional, Union, List
 import requests
 import pandas as pd
 import logging
@@ -13,7 +13,6 @@ logger = logging.getLogger('{}.{}'.format(__name__, 'connatix_report_logger'))
 class ConnatixAdRevenueReportStream(HttpStream):
     url_base = "https://conapi.connatix.com/"
     http_method = "POST"
-    primary_key = None
 
     def __init__(self, config: Mapping[str, Any], **kwargs):
         super().__init__(authenticator=kwargs.get("authenticator"))
@@ -23,7 +22,7 @@ class ConnatixAdRevenueReportStream(HttpStream):
         self,
         **kwargs
     ) -> str:
-        return "graphql"  # TODO
+        return "graphql"
 
     def request_headers(self, **kwargs) -> Mapping[str, Any]:
         return {'content-type': 'application/graphql'}
@@ -77,3 +76,13 @@ class ConnatixAdRevenueReportStream(HttpStream):
         for row in report_df.to_dict(orient='records'):
             item = self.generate_item(row)
             yield item.dict()
+
+    @property
+    def primary_key(self) -> Optional[Union[str, List[str], List[List[str]]]]:
+        """
+        :return: string if single primary key,
+        list of strings if composite primary key,
+        list of list of strings if composite primary key consisting of nested fields.
+        If the stream has no primary keys, return None.
+        """
+        return ["domain", "customer_id", "player_id", "device", "hour", "date"]
