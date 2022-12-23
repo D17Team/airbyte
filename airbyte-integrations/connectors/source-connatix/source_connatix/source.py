@@ -5,7 +5,6 @@ from airbyte_cdk.sources.streams import Stream
 from airbyte_cdk.sources.streams.http.requests_native_auth import TokenAuthenticator
 
 
-
 class SourceConnatix(AbstractSource):
     def check_connection(self, logger, config) -> Tuple[bool, any]:
         # Token implement token base authentication and use it here. # make an api call to check if the credentials are valid
