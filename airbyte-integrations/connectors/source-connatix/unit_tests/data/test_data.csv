@@ -1,0 +1,11 @@
+Player Id,Domain / App,Hour,Player Name,Device,Customer Id,Customer Name,Ad Impressions,Publisher Total Revenue ($)
+fdf64619-f0f7-4020-a8a4-808666d89037,www.on3.com,23-DEC-2022 01:00,On3 Stories Player,Smartphone,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,4776,15.69
+fdf64619-f0f7-4020-a8a4-808666d89037,www.on3.com,23-DEC-2022 01:00,On3 Stories Player,Tablet,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,141,0.53
+fdf64619-f0f7-4020-a8a4-808666d89037,www.on3.com,23-DEC-2022 02:00,On3 Stories Player,Desktop,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,332,0.68
+fdf64619-f0f7-4020-a8a4-808666d89037,www.on3.com,23-DEC-2022 02:00,On3 Stories Player,Smartphone,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,4151,14.42
+fdf64619-f0f7-4020-a8a4-808666d89037,www.on3.com,23-DEC-2022 02:00,On3 Stories Player,Tablet,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,130,0.46
+fdf64619-f0f7-4020-a8a4-808666d89037,www.on3.com,23-DEC-2022 03:00,On3 Stories Player,Desktop,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,149,0.29
+fdf64619-f0f7-4020-a8a4-808666d89037,www.on3.com,23-DEC-2022 03:00,On3 Stories Player,Smartphone,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,2227,7.87
+fdf64619-f0f7-4020-a8a4-808666d89037,www.on3.com,23-DEC-2022 03:00,On3 Stories Player,Tablet,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,60,0.24
+fdf64619-f0f7-4020-a8a4-808666d89037,www.qa.on3.com,19-DEC-2022 11:00,On3 Stories Player,Desktop,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,0,0.0
+Total:,,,,,,,8704902,32889.43
