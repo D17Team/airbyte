@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "cpm_cpc_revenue": { "title": "Cpm Cpc Revenue", "type": "number" },
+    "impressions": { "title": "Impressions", "type": "number" },
+    "eCpm": { "title": "Ecpm", "type": "integer" },
+    "unfilled_impressions": {
+      "title": "Unfilled Impressions",
+      "type": "number"
+    },
+    "ad_unit": { "title": "Ad Unit", "type": "string" },
+    "referrer": { "title": "Referrer", "type": "string" },
+    "hour": { "title": "Hour", "type": "integer" },
+    "click": { "title": "Click", "type": "number" },
+    "date": { "title": "Date", "type": "string", "format": "date-time" },
+    "customer_name": { "title": "Customer Name", "type": "string" },
+    "ad_unit_id": { "title": "Ad Unit Id", "type": "integer" },
+    "advertiser_name": { "title": "Advertiser Name", "type": "string" }
+  },
+  "required": [
+    "cpm_cpc_revenue",
+    "ad_unit_id",
+    "advertiser_name",
+    "impressions",
+    "eCpm",
+    "unfilled_impressions",
+    "ad_unit",
+    "hour",
+    "date",
+    "referrer",
+    "click",
+    "customer_name"
+  ]
+}

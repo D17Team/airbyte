@@ -1901,6 +1901,11 @@
   dockerRepository: airbyte/source-younium
   dockerImageTag: 0.1.0
   documentationUrl: https://docs.airbyte.com/integrations/sources/younium
+- name: Google Ad Manager
+  sourceDefinitionId: a97c80f2-4fcd-11ed-bdc3-0242ac120002
+  dockerRepository: airbyte/source-google-ad-manager
+  dockerImageTag: 0.1.0
+  documentationUrl: https://docs.airbyte.io/integrations/sources/google-ad-manager
   sourceType: api
   releaseStage: alpha
 - name: Zoom

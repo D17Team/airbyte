@@ -4,41 +4,109 @@ connectionSpecification:
   title: Google Ad Manager Source Spec
   type: object
   required:
-    - ClientId
-    - ClientSecret
-    - DeveloperKey
-    - ServiceAccountName
-    - ServiceKey
-    - ProfileId
+    - type
+    - customer_name
+    - token_uri
+    - auth_provider_x509_cert_url
+    - auth_uri
+    - project_id
+    - private_key_id
+    - private_key
+    - client_id
+    - client_email
+    - start_date
+    - timezone
   properties:
-    ClientId:
+    customer_name:
+     title: Customer Name
+     type: string
+     description: The name of the customer to connect to.
+     examples:
+        - "exported_customer"
+     order: 0
+    type:
+      title: Type
       type: string
-      description: In the form .apps.googleusercontent.com (give more info on how to find)
+      description: the type of authentication used to access the Google Ad Manager API
+      default: service_account
+      order: 1
+    start_date:
+      title: Start Date
+      type: "string"
+      pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+      description: "The start date in ISO 8601 format."
       examples:
-        - "000000000000-xxxxxxxxxx.apps.googleusercontent.com"
-    ClientSecret:
+      - "2019-01-01"
+      order: 2
+    timezone:
+      type: "string"
+      title: "timezone"
+      description: "Timezone to use when generating reports. Only IANA timezones\
+        \ are supported (https://nodatime.org/TimeZones)"
+      examples:
+      - "Europe/London"
+      - "America/Chicago"
+      default: "America/Chicago"
+      order: 3
+    project_id:
+      title: Project ID
       type: string
-      description: Give more info on how to aquire
+      description: the name of the project on google ad manager
       airbyte_secret: true
-    DeveloperKey:
-      type: string
-      description: Give more info on how to aquire
-    ServiceAccountName:
-      type: string
-      description: Of the form .iam.gserviceaccount.com (Give more info)
       examples:
-        - "xxxx@xxxx.iam.gserviceaccount.com"
-    ServiceKey:
+        - "1030xxxxxxxxxxxxxxx53"
+      order: 4
+    private_key_id:
+      title: Private Key ID
+      type: string
+      description: Id of the ssh private key to use
+      airbyte_secret: true
+      order: 5
+    private_key:
+      title: Private Key
       type: string
       description: Private key for service account (give more info)
       airbyte_secret: true
       examples:
         - "-----BEGIN PRIVATE KEY----- xxxxxxxx -----END PRIVATE KEY----- " 
-    ProfileId:
+      order: 6
+    client_email:
+      title: Client Email
       type: string
-      description: Numbers associated with your google ad manager account found in the google ad manager console on the left divider
-    CustomUnitIds:
-      type: object
-      description: Support for accessing custom ad units, passed as a json object
+      description: Of the form .iam.gserviceaccount.com
+      airbyte_secret: true
       examples:
-        - { "Custom_Unit_Id": "0000000000" }
+        - "xxxx@xxxx.iam.gserviceaccount.com"
+      order: 7
+    client_id:
+      title: Client ID
+      type: string
+      description: In form of 111*********
+      airbyte_secret: true
+      examples:
+        - "1030xxxxxxxxxxxxxxx53"
+      order: 8
+    auth_uri:
+      title: Auth URI
+      type: string
+      description: "The URI for the authorization server. Defaults to https://accounts.google.com/o/oauth2/auth"
+      default: "https://accounts.google.com/o/oauth2/auth"
+      examples:
+        - "https://accounts.google.com/o/oauth2/auth"
+      order: 9
+    token_uri:
+      title: Token URI
+      type: string
+      description: "The URI for the token server. Defaults to https://oauth2.googleapis.com/token"
+      default: "https://oauth2.googleapis.com/token"
+      examples:
+        - "https://oauth2.googleapis.com/token"
+      order: 10
+    auth_provider_x509_cert_url:
+      title: Auth Provider X509 Cert URL
+      type: string
+      description: "The URI for the certificate server. Defaults to https://www.googleapis.com/oauth2/v1/certs"
+      default: "https://www.googleapis.com/oauth2/v1/certs"
+      examples:
+        - "https://www.googleapis.com/oauth2/v1/certs"
+      order: 11
