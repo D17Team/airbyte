@@ -1,0 +1,6 @@
+,Player Id,Domain / App,Hour,Player Name,Device,Customer Id,Customer Name,Ad Impressions,Publisher Total Revenue ($)
+0,02c3c57f-1e68-45a4-8185-b692008ea982,www.on3.com,16-DEC-2022 00:00,Mississippi State Player,Desktop,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,206,0.58
+1,02c3c57f-1e68-45a4-8185-b692008ea982,www.on3.com,16-DEC-2022 00:00,Mississippi State Player,Smartphone,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,13,0.04
+2,02c3c57f-1e68-45a4-8185-b692008ea982,www.on3.com,16-DEC-2022 00:00,Mississippi State Player,Tablet,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,4,0.01
+3,02c3c57f-1e68-45a4-8185-b692008ea982,www.on3.com,16-DEC-2022 01:00,Mississippi State Player,Desktop,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,183,0.56
+4,02c3c57f-1e68-45a4-8185-b692008ea982,www.on3.com,16-DEC-2022 01:00,Mississippi State Player,Smartphone,d5c08bb0-aac7-47ee-a414-99e239c45d9d,D17,2,0.01
